@@ -1,4 +1,4 @@
-const checkLength = (string, maxLength) => (string.length <= maxLength);
+const validateStringLength = (string, maxLength) => (string.length <= maxLength);
 
 const isPalindrome = (string) => {
   const formattedString = string.replaceAll(' ', '').toLowerCase();
