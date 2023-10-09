@@ -34,12 +34,15 @@ isPalindrome('Лёша на полке клопа нашёл '); // true
 const extractNumbers = (value) => {
   const string = value.toString();
   let result = '';
+
   for (let charIndex = 0; charIndex < string.length; charIndex++) {
     const currentChar = string[charIndex];
+
     if (currentChar >= '0' && currentChar <= '9') {
       result += currentChar;
     }
   }
+
   return parseInt(result, 10);
 };
 
