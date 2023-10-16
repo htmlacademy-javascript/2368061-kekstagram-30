@@ -116,7 +116,7 @@ const getRandomMessage = (messages, minRandomMessages, maxRandomMessages) => {
 const createComment = () => ({
   id: commentIdGenerator(),
   avatar: `img/avatar-${getRandomInteger(AVATARS_MIN_ID, AVATARS_MAX_ID)}.svg`,
-  message: getRandomMessage(MESSAGES, MAX_RANDOM_MESSAGES, MIN_RANDOM_MESSAGES),
+  message: getRandomMessage(MESSAGES, MIN_RANDOM_MESSAGES, MAX_RANDOM_MESSAGES),
   name: getRandomArrayElement(NAMES)
 });
 
