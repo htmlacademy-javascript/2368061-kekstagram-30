@@ -5,7 +5,7 @@ const DESCRIPTIONS = [
   'Линии и формы в гармонии',
   'Абстрактные перспективы',
   'Тайна в пространстве',
-  'Игра света во мраке',
+  'Сложность простоты',
   'Ритмы без мелодии',
   'Границы и их размытие',
   'Фрагменты вечности',
@@ -13,19 +13,9 @@ const DESCRIPTIONS = [
   'Интерпретация действительности',
   'Шум визуального мира',
   'Смешение измерений',
-  'Гипнотические отражения',
-  'Ассоциации без слов',
-  'Сложность простоты',
-  'Искусство абстракции',
-  'Геометрический портрет',
-  'Инновации в деталях',
-  'Магия вещей незаметных',
-  'Игра теней и света',
-  'Сокрытое в геометрии',
-  'Спрятанные миры',
-  'Искусство видеть невидимое'
+  'Гипнотические отражения'
 ];
-const MESSAGES = [
+const COMMENT_LINES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -38,29 +28,30 @@ const NAMES = [
   'Анри Картье-Брессон',
   'Ричард Аведон',
   'Себастьян Салгаду',
+  'Александр Родченко',
   'Уильям Юджин Смит',
+  'Диана Арбус',
   'Ги Бурден',
   'Артур Феллиг',
-  'Александр Родченко',
   'Ирвин Пенн',
   'Антон Корбейн',
   'Стивен Майзел',
-  'Диана Арбус',
   'Энни Лейбовиц'
 ];
 const PHOTO_COUNT = 25;
-const PHOTO_ID_RANGE_START = 1;
-const PHOTO_ID_RANGE_END = 25;
-const URL_RANGE_START = 1;
-const URL_RANGE_END = 25;
-const LIKES_MIN_NUMBER = 15;
-const LIKES_MAX_NUMBER = 200;
-const COMMENTS_MIN_NUMBER = 0;
-const COMMENTS_MAX_NUMBER = 30;
-const AVATARS_MIN_ID = 1;
-const AVATARS_MAX_ID = 6;
-const MIN_RANDOM_MESSAGES = 1;
-const MAX_RANDOM_MESSAGES = 2;
+const PHOTO_ID_MIN = 1;
+const FILE_NUMBER_MIN = 1;
+const FILE_NUMBER_MAX = 25;
+const COMMENT_COUNT_MIN = 0;
+const COMMENT_COUNT_MAX = 30;
+const AVATAR_NUMBER_MIN = 1;
+const AVATAR_NUMBER_MAX = 6;
+const LIKE_COUNT_MIN = 15;
+const LIKE_COUNT_MAX = 200;
+const COMMENT_LINE_COUNT_MIN = 1;
+const COMMENT_LINE_COUNT_MAX = 2;
+
+const fileNumberMax = (FILE_NUMBER_MAX - FILE_NUMBER_MIN + 1 >= PHOTO_COUNT) ? FILE_NUMBER_MAX : (PHOTO_COUNT + FILE_NUMBER_MIN - 1);
 
 const getRandomInteger = (start, end) => {
   const lower = Math.ceil(Math.min(start, end));
@@ -71,18 +62,24 @@ const getRandomInteger = (start, end) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const createRandomIdFromRangeGenerator = (minId, maxId) => {
+const createSequentialIdGenerator = (idMin = 0) => {
+  let currentValue = idMin;
+
+  return () => currentValue++;
+};
+
+const createRandomIdFromRangeGenerator = (idMin, idMax) => {
   const previousValues = [];
 
   return () => {
-    let currentValue = getRandomInteger(minId, maxId);
+    let currentValue = getRandomInteger(idMin, idMax);
 
-    if (previousValues.length >= (maxId - minId + 1)) {
+    if (previousValues.length >= (idMax - idMin + 1)) {
       return null;
     }
 
     while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(minId, maxId);
+      currentValue = getRandomInteger(idMin, idMax);
     }
 
     previousValues.push(currentValue);
@@ -91,43 +88,38 @@ const createRandomIdFromRangeGenerator = (minId, maxId) => {
   };
 };
 
-const photoIdGenerator = createRandomIdFromRangeGenerator(PHOTO_ID_RANGE_START, PHOTO_ID_RANGE_END);
-const urlGenerator = createRandomIdFromRangeGenerator(URL_RANGE_START, URL_RANGE_END);
 const commentIdGenerator = createRandomIdFromRangeGenerator(0, Number.MAX_SAFE_INTEGER);
+const photoIdGenerator = createSequentialIdGenerator(PHOTO_ID_MIN);
+const fileNumberGenerator = createRandomIdFromRangeGenerator(FILE_NUMBER_MIN, fileNumberMax);
 
-const getRandomMessage = (messages, minRandomMessages, maxRandomMessages) => {
-  const joinedMessagesNumber = getRandomInteger(minRandomMessages, maxRandomMessages);
+const createMessage = (lines, lineCountMin, lineCountMax) => {
+  const lineCount = getRandomInteger(lineCountMin, lineCountMax);
 
-  if (joinedMessagesNumber >= messages.length) {
-    return messages.join(' ');
+  if (lineCount >= lines.length) {
+    return lines.join(' ');
   }
 
-  const messageIndexGenerator = createRandomIdFromRangeGenerator(0, messages.length - 1);
-  let result = '';
+  const lineIndexGenerator = createRandomIdFromRangeGenerator(0, lines.length - 1);
 
-  for (let i = 0; i < joinedMessagesNumber; i++) {
-    const currentIndex = messageIndexGenerator();
-    result += ` ${messages[currentIndex]}`;
-  }
-
-  return result.trimStart();
+  return Array.from({ length: lineCount }, () => lines[lineIndexGenerator()]).join(' ');
 };
 
 const createComment = () => ({
   id: commentIdGenerator(),
-  avatar: `img/avatar-${getRandomInteger(AVATARS_MIN_ID, AVATARS_MAX_ID)}.svg`,
-  message: getRandomMessage(MESSAGES, MIN_RANDOM_MESSAGES, MAX_RANDOM_MESSAGES),
+  avatar: `img/avatar-${getRandomInteger(AVATAR_NUMBER_MIN, AVATAR_NUMBER_MAX)}.svg`,
+  message: createMessage(COMMENT_LINES, COMMENT_LINE_COUNT_MIN, COMMENT_LINE_COUNT_MAX),
   name: getRandomArrayElement(NAMES)
 });
 
 const createPhotoDescription = () => ({
   id: photoIdGenerator(),
-  url: `photos/${urlGenerator()}.jpg`,
+  url: `photos/${fileNumberGenerator()}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
-  likes: getRandomInteger(LIKES_MIN_NUMBER, LIKES_MAX_NUMBER),
-  comments: Array.from({ length: getRandomInteger(COMMENTS_MIN_NUMBER, COMMENTS_MAX_NUMBER) }, createComment)
+  likes: getRandomInteger(LIKE_COUNT_MIN, LIKE_COUNT_MAX),
+  comments: Array.from({ length: getRandomInteger(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX) }, createComment)
 });
 
 const photoDescriptions = Array.from({ length: PHOTO_COUNT }, createPhotoDescription);
 
-console.log(photoDescriptions);
+// eslint-disable-next-line no-console
+console.table(photoDescriptions);
