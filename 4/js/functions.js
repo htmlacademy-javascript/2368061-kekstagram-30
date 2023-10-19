@@ -81,7 +81,7 @@ const isMeetingInWorkday = (workdayStart, workdayEnd, meetingStart, duration) =>
   return (isTimeLaterOrSame(workdayStartTime, meetingStartTime) && isTimeLaterOrSame(meetingEndTime, workdayEndTime));
 };
 
-// eslint-disable no-console
+/* eslint-disable no-console */
 
 console.assert(isMeetingInWorkday('08:00', '17:30', '14:00', 90)); // true
 console.assert(isMeetingInWorkday('8:0', '10:0', '8:0', 120)); // true
@@ -89,4 +89,4 @@ console.assert(!isMeetingInWorkday('08:00', '14:30', '14:00', 90)); // false
 console.assert(!isMeetingInWorkday('14:00', '17:30', '08:0', 90)); // false
 console.assert(!isMeetingInWorkday('8:00', '17:30', '08:00', 900)); // false
 
-// eslint-enable no-console
+/* eslint-enable no-console */
