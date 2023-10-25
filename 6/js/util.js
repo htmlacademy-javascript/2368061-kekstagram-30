@@ -33,7 +33,7 @@ const createRandomIdFromRangeGenerator = (idMin, idMax) => {
   };
 };
 
-const getJoinedLine = (lines, lineCountMin, lineCountMax) => {
+const createJoinedLine = (lines, lineCountMin, lineCountMax) => {
   const lineCount = getRandomInteger(lineCountMin, lineCountMax);
 
   if (lineCount >= lines.length) {
@@ -45,4 +45,4 @@ const getJoinedLine = (lines, lineCountMin, lineCountMax) => {
   return Array.from({ length: lineCount }, () => lines[lineIndexGenerator()]).join(' ');
 };
 
-export { getRandomInteger, getRandomArrayElement, createSequentialIdGenerator, createRandomIdFromRangeGenerator, getJoinedLine };
+export { getRandomInteger, getRandomArrayElement, createSequentialIdGenerator, createRandomIdFromRangeGenerator, createJoinedLine };

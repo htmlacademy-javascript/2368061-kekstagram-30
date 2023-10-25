@@ -1,4 +1,10 @@
-import { getRandomInteger, getRandomArrayElement, createSequentialIdGenerator, createRandomIdFromRangeGenerator, getJoinedLine } from './util.js';
+import {
+  getRandomInteger,
+  getRandomArrayElement,
+  createSequentialIdGenerator,
+  createRandomIdFromRangeGenerator,
+  createJoinedLine
+} from './util.js';
 
 const DESCRIPTIONS = [
   'Игра эмоций в красках',
@@ -64,7 +70,7 @@ const fileNumberGenerator = createRandomIdFromRangeGenerator(FILE_NUMBER_MIN, fi
 const createComment = () => ({
   id: commentIdGenerator(),
   avatar: `img/avatar-${getRandomInteger(AVATAR_NUMBER_MIN, AVATAR_NUMBER_MAX)}.svg`,
-  message: getJoinedLine(COMMENT_LINES, COMMENT_LINE_COUNT_MIN, COMMENT_LINE_COUNT_MAX),
+  message: createJoinedLine(COMMENT_LINES, COMMENT_LINE_COUNT_MIN, COMMENT_LINE_COUNT_MAX),
   name: getRandomArrayElement(NAMES)
 });
 

@@ -1,3 +1,5 @@
-import { appendPictures } from './picture-gallery.js';
+import { createPictures } from './data.js';
+import { addThumbnails } from './thumbnail-gallery.js';
 
-appendPictures();
+const pictures = createPictures();
+addThumbnails(pictures);
