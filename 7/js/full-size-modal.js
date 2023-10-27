@@ -17,26 +17,30 @@ const modalCloseButton = modal.querySelector('.big-picture__cancel');
 
 let currentPictureData;
 
-const createCommentNodes = (comments) => {
-  const commentFragment = document.createDocumentFragment();
+const createComment = ({ avatar, message, name }) => {
+  const comment = commentTemplate.cloneNode(true);
+
+  comment.querySelector('.social__picture').src = avatar;
+  comment.querySelector('.social__picture').alt = name;
+  comment.querySelector('.social__text').textContent = message;
+
+  return comment;
+};
+
+const createCommentFragment = (comments) => {
+  const fragment = document.createDocumentFragment();
   const createdCommentsCount = Math.min(commentList.childElementCount + COMMENTS_LOAD_STEP, comments.length);
 
   for (let i = commentList.childElementCount; i < createdCommentsCount; i++) {
-    const { avatar, message, name } = comments[i];
-    const commentNode = commentTemplate.cloneNode(true);
-
-    commentNode.querySelector('.social__picture').src = avatar;
-    commentNode.querySelector('.social__picture').alt = name;
-    commentNode.querySelector('.social__text').textContent = message;
-
-    commentFragment.append(commentNode);
+    const comment = createComment(comments[i]);
+    fragment.append(comment);
   }
 
   if (createdCommentsCount === comments.length) {
     commentLoader.classList.add('hidden');
   }
 
-  return commentFragment;
+  return fragment;
 };
 
 const onDocumentKeydown = (evt) => {
@@ -47,12 +51,12 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-function openFullSizeModal(dataObject) {
-  picture.src = dataObject.url;
-  likeCount.textContent = dataObject.likes;
-  totalCommentCount.textContent = dataObject.comments.length;
-  description.textContent = dataObject.description;
-  commentList.replaceChildren(createCommentNodes(dataObject.comments));
+function openFullSizeModal(pictureData) {
+  picture.src = pictureData.url;
+  likeCount.textContent = pictureData.likes;
+  totalCommentCount.textContent = pictureData.comments.length;
+  description.textContent = pictureData.description;
+  commentList.replaceChildren(createCommentFragment(pictureData.comments));
   shownCommentCount.textContent = commentList.childElementCount;
 
   modal.classList.remove('hidden');
@@ -85,7 +89,7 @@ const addThumbnailClickHandler = (pictures) => {
 };
 
 commentLoader.addEventListener('click', () => {
-  const commentNodes = createCommentNodes(currentPictureData.comments);
+  const commentNodes = createCommentFragment(currentPictureData.comments);
 
   commentList.append(commentNodes);
   shownCommentCount.textContent = commentList.childElementCount;
