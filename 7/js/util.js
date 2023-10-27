@@ -45,16 +45,6 @@ const createJoinedLine = (lines, lineCountMin, lineCountMax) => {
   return Array.from({ length: lineCount }, () => lines[lineIndexGenerator()]).join(' ');
 };
 
-const getDataFromUrl = (url, objectArray, relativeUrlStart) => {
-  const relativeUrl = url.slice(url.indexOf(relativeUrlStart));
-
-  for (const item of objectArray) {
-    if (item.url === relativeUrl) {
-      return item;
-    }
-  }
-};
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 export {
@@ -63,6 +53,5 @@ export {
   createSequentialIdGenerator,
   createRandomIdFromRangeGenerator,
   createJoinedLine,
-  getDataFromUrl,
   isEscapeKey
 };
