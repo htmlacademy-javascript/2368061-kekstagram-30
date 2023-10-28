@@ -29,14 +29,14 @@ const createComment = ({ avatar, message, name }) => {
 
 const createCommentFragment = (comments) => {
   const fragment = document.createDocumentFragment();
-  const createdCommentsCount = Math.min(commentList.childElementCount + COMMENTS_LOAD_STEP, comments.length);
+  const fragmentCommentCount = Math.min(comments.length - commentList.childElementCount, COMMENTS_LOAD_STEP);
 
-  for (let i = commentList.childElementCount; i < createdCommentsCount; i++) {
+  for (let i = commentList.childElementCount; i < commentList.childElementCount + fragmentCommentCount; i++) {
     const comment = createComment(comments[i]);
     fragment.append(comment);
   }
 
-  if (createdCommentsCount === comments.length) {
+  if (fragmentCommentCount === comments.length - commentList.childElementCount) {
     commentLoader.classList.add('hidden');
   }
 
