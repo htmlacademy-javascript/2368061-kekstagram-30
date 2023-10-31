@@ -13,7 +13,7 @@ const totalCommentCount = commentCount.querySelector('.social__comment-total-cou
 const commentList = modal.querySelector('.social__comments');
 const description = modal.querySelector('.social__caption');
 const commentLoader = modal.querySelector('.comments-loader');
-const modalCloseButton = modal.querySelector('.big-picture__cancel');
+const closeButton = modal.querySelector('.big-picture__cancel');
 
 let currentPictureData;
 
@@ -95,7 +95,7 @@ commentLoader.addEventListener('click', () => {
   shownCommentCount.textContent = commentList.childElementCount;
 });
 
-modalCloseButton.addEventListener('click', () => {
+closeButton.addEventListener('click', () => {
   closeFullSizeModal();
 });
 
