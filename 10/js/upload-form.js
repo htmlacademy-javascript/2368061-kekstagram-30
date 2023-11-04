@@ -39,8 +39,8 @@ const closeUploadForm = () => {
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  cancelEffects();
   pristine.reset();
+  previewImage.style.transform = '';
 
   document.removeEventListener('keydown', onDocumentKeydown);
 };
