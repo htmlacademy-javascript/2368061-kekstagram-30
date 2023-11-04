@@ -45,7 +45,7 @@ const closeUploadForm = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const updateScale = (value) => {
+const changeScale = (value) => {
   if (value < SCALE_MIN) {
     value = SCALE_MIN;
   } else if (value > SCALE_MAX) {
@@ -77,13 +77,13 @@ form.addEventListener('reset', () => {
 scaleDownControl.addEventListener('click', () => {
   const scaleAfterClick = parseInt(scaleValue.value, 10) - SCALE_STEP;
 
-  updateScale(scaleAfterClick);
+  changeScale(scaleAfterClick);
 });
 
 scaleUpControl.addEventListener('click', () => {
   const scaleAfterClick = parseInt(scaleValue.value, 10) + SCALE_STEP;
 
-  updateScale(scaleAfterClick);
+  changeScale(scaleAfterClick);
 });
 
 export { addImageUploadHandler };

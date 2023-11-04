@@ -4,21 +4,21 @@ const effectLevelContainer = document.querySelector('.img-upload__effect-level')
 const effectSlider = effectLevelContainer.querySelector('.effect-level__slider');
 const effectValue = effectLevelContainer.querySelector('.effect-level__value');
 
-const cancelEffects = () => {
-  effectLevelContainer.classList.add('hidden');
-  previewImage.style.filter = '';
-};
-
 const addEffect = (min, max, step, filter, unit = '') => {
   effectSlider.noUiSlider.updateOptions({
     range: {
-      min: min,
-      max: max
+      min,
+      max
     },
     start: max,
-    step: step
+    step
   });
-  previewImage.style.filter = `${filter}(${effectSlider.noUiSlider.get()}${unit})`;
+  previewImage.style.filter = `${filter}(${max}${unit})`;
+};
+
+const cancelEffects = () => {
+  effectLevelContainer.classList.add('hidden');
+  previewImage.style.filter = '';
 };
 
 noUiSlider.create(effectSlider, {
