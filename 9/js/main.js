@@ -1,9 +1,10 @@
 import { createPictures } from './data.js';
-import { appendThumbnails } from './thumbnail-gallery.js';
-import { addThumbnailClickHandler } from './full-size-modal.js';
-import { addUploadInputChangeHandler } from './upload-form.js';
+import { renderThumbnails } from './thumbnail-gallery.js';
+import { addFullSizeModalHandlers } from './full-size-modal.js';
+import { addImageUploadHandler } from './upload-form.js';
 
 const pictures = createPictures();
-appendThumbnails(pictures);
-addThumbnailClickHandler(pictures);
-addUploadInputChangeHandler();
+
+renderThumbnails(pictures);
+addFullSizeModalHandlers(pictures);
+addImageUploadHandler();

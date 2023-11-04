@@ -1,14 +1,5 @@
 import { isEscapeKey } from './util.js';
-import {
-  validateHashtagCount,
-  getHashtagCountError,
-  validateHashtagUniqueness,
-  getHashtagUniquenessError,
-  validateHashtagSyntax,
-  getHashtagSyntaxError,
-  validateDescriptionLength,
-  getDescriptionLengthError
-} from './validation.js';
+import { addUploadFormValidators } from './validation.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('.img-upload__input');
@@ -47,12 +38,9 @@ const pristine = new Pristine(form, {
   errorTextTag: 'p'
 });
 
-pristine.addValidator(hashtags, validateHashtagCount, getHashtagCountError);
-pristine.addValidator(hashtags, validateHashtagUniqueness, getHashtagUniquenessError);
-pristine.addValidator(hashtags, validateHashtagSyntax, getHashtagSyntaxError);
-pristine.addValidator(description, validateDescriptionLength, getDescriptionLengthError);
+addUploadFormValidators(pristine, hashtags, description);
 
-const addUploadInputChangeHandler = () => {
+const addImageUploadHandler = () => {
   uploadInput.addEventListener('change', () => {
     openUploadForm();
   });
@@ -71,4 +59,4 @@ form.addEventListener('reset', () => {
   pristine.reset();
 });
 
-export { addUploadInputChangeHandler };
+export { addImageUploadHandler };

@@ -61,13 +61,11 @@ const validateDescriptionLength = (value) => value.length <= DESCRIPTION_LENGTH_
 
 const getDescriptionLengthError = () => `Длина комментария больше ${DESCRIPTION_LENGTH_MAX} символов`;
 
-export {
-  validateHashtagCount,
-  getHashtagCountError,
-  validateHashtagUniqueness,
-  getHashtagUniquenessError,
-  validateHashtagSyntax,
-  getHashtagSyntaxError,
-  validateDescriptionLength,
-  getDescriptionLengthError
+const addUploadFormValidators = (pristineInstance, hashtagNode, descriptionNode) => {
+  pristineInstance.addValidator(hashtagNode, validateHashtagCount, getHashtagCountError);
+  pristineInstance.addValidator(hashtagNode, validateHashtagUniqueness, getHashtagUniquenessError);
+  pristineInstance.addValidator(hashtagNode, validateHashtagSyntax, getHashtagSyntaxError);
+  pristineInstance.addValidator(descriptionNode, validateDescriptionLength, getDescriptionLengthError);
 };
+
+export { addUploadFormValidators };

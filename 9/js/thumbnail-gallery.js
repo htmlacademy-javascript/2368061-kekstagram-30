@@ -8,20 +8,20 @@ const createThumbnail = ({ url, description, likes, comments }, index) => {
   thumbnail.querySelector('.picture__img').alt = description;
   thumbnail.querySelector('.picture__likes').textContent = likes;
   thumbnail.querySelector('.picture__comments').textContent = comments.length;
-  thumbnail.setAttribute('data-index', index);
+  thumbnail.dataset.arrayIndex = index;
 
   return thumbnail;
 };
 
-const appendThumbnails = (pictures) => {
+const renderThumbnails = (pictures) => {
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < pictures.length; i++) {
-    const thumbnail = createThumbnail(pictures[i], i);
+  pictures.forEach((picture, index) => {
+    const thumbnail = createThumbnail(picture, index);
     fragment.append(thumbnail);
-  }
+  });
 
   pictureContainer.append(fragment);
 };
 
-export { appendThumbnails };
+export { renderThumbnails };
