@@ -35,7 +35,7 @@ const getHashtagUniquenessError = () => {
 };
 
 const validateHashtagSyntax = (value) => {
-  if (value.trim() === '') {
+  if (value === '') {
     return true;
   }
 
