@@ -1,3 +1,7 @@
+const SLIDER_INITIAL_MIN = 0;
+const SLIDER_INITIAL_MAX = 100;
+const SLIDER_INITIAL_STEP = 1;
+
 const previewImage = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
 const effectLevelContainer = document.querySelector('.img-upload__effect-level');
@@ -19,24 +23,20 @@ const addEffect = (min, max, step, filter, unit = '') => {
 const cancelEffects = () => {
   effectLevelContainer.classList.add('hidden');
   previewImage.style.filter = '';
+  effectValue.value = '';
 };
 
 noUiSlider.create(effectSlider, {
   range: {
-    min: 0,
-    max: 100,
+    min: SLIDER_INITIAL_MIN,
+    max: SLIDER_INITIAL_MAX,
   },
-  start: 100,
-  step: 1,
+  start: SLIDER_INITIAL_MAX,
+  step: SLIDER_INITIAL_STEP,
   connect: 'lower',
   format: {
-    to: (value) => {
-      if (Number.isInteger(value)) {
-        return value.toFixed(0);
-      }
-      return value.toFixed(1);
-    },
-    from: (value) => parseFloat(value),
+    to: (value) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1),
+    from: (value) => parseFloat(value)
   },
 });
 

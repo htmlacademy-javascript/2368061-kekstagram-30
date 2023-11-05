@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { pristine } from './validation.js';
+import { createPristine } from './validation.js';
 import { cancelEffects } from './effects.js';
 
 const SCALE_MIN = 25;
@@ -15,6 +15,8 @@ const scaleValue = overlay.querySelector('.scale__control--value');
 const scaleDownControl = overlay.querySelector('.scale__control--smaller');
 const scaleUpControl = overlay.querySelector('.scale__control--bigger');
 const previewImage = overlay.querySelector('.img-upload__preview > img');
+
+const pristine = createPristine(form, hashtags, description);
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {

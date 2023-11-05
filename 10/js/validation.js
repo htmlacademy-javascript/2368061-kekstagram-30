@@ -3,17 +3,6 @@ const HASHTAG_COUNT_MAX = 5;
 const DESCRIPTION_LENGTH_MAX = 140;
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
-const form = document.querySelector('.img-upload__form');
-const hashtags = form.querySelector('.text__hashtags');
-const description = form.querySelector('.text__description');
-
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--error',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'p'
-});
-
 let duplicateHashtags = [];
 let invalidHashtags = [];
 
@@ -72,9 +61,20 @@ const validateDescriptionLength = (value) => value.length <= DESCRIPTION_LENGTH_
 
 const getDescriptionLengthError = () => `Длина комментария больше ${DESCRIPTION_LENGTH_MAX} символов`;
 
-pristine.addValidator(hashtags, validateHashtagCount, getHashtagCountError);
-pristine.addValidator(hashtags, validateHashtagUniqueness, getHashtagUniquenessError);
-pristine.addValidator(hashtags, validateHashtagSyntax, getHashtagSyntaxError);
-pristine.addValidator(description, validateDescriptionLength, getDescriptionLengthError);
+const createPristine = (form, hashtagField, descriptionField) => {
+  const pristine = new Pristine(form, {
+    classTo: 'img-upload__field-wrapper',
+    errorClass: 'img-upload__field-wrapper--error',
+    errorTextParent: 'img-upload__field-wrapper',
+    errorTextTag: 'p'
+  });
 
-export { pristine };
+  pristine.addValidator(hashtagField, validateHashtagCount, getHashtagCountError);
+  pristine.addValidator(hashtagField, validateHashtagUniqueness, getHashtagUniquenessError);
+  pristine.addValidator(hashtagField, validateHashtagSyntax, getHashtagSyntaxError);
+  pristine.addValidator(descriptionField, validateDescriptionLength, getDescriptionLengthError);
+
+  return pristine;
+};
+
+export { createPristine };
