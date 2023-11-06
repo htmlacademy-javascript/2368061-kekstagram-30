@@ -1,6 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { createPristine } from './validation.js';
-import { cancelEffects } from './effects.js';
+import { cancelEffect } from './effect.js';
 
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
@@ -32,7 +32,7 @@ const openUploadForm = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  cancelEffects();
+  cancelEffect();
 
   document.addEventListener('keydown', onDocumentKeydown);
 };

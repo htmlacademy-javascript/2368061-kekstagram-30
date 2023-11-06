@@ -40,13 +40,8 @@ const validateHashtagSyntax = (value) => {
   }
 
   const hashtagArray = value.trim().replace(/\s+/g, ' ').split(' ');
-  invalidHashtags = [];
 
-  hashtagArray.forEach((hashtag) => {
-    if (!HASHTAG_REGEX.test(hashtag)) {
-      invalidHashtags.push(hashtag);
-    }
-  });
+  invalidHashtags = hashtagArray.filter((hashtag) => !HASHTAG_REGEX.test(hashtag));
 
   return !invalidHashtags.length;
 };
