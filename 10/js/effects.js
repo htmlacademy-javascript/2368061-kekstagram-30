@@ -1,6 +1,7 @@
 const SLIDER_INITIAL_MIN = 0;
 const SLIDER_INITIAL_MAX = 100;
 const SLIDER_INITIAL_STEP = 1;
+const FILTER_VALUE_REGEX = /\d+(\.\d+)?/;
 
 const previewImage = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
@@ -40,17 +41,11 @@ noUiSlider.create(effectSlider, {
   },
 });
 
-const addChromeEffect = () => addEffect(0, 1, 0.1, 'grayscale');
-const addSepiaEffect = () => addEffect(0, 1, 0.1, 'sepia');
-const addMarvinEffect = () => addEffect(0, 100, 1, 'invert', '%');
-const addPhobosEffect = () => addEffect(0, 3, 0.1, 'blur', 'px');
-const addHeatEffect = () => addEffect(1, 3, 0.1, 'brightness');
-
 effectSlider.noUiSlider.on('update', () => {
   const effectSliderValue = effectSlider.noUiSlider.get();
 
   effectValue.value = effectSliderValue;
-  previewImage.style.filter = previewImage.style.filter.replace(/\d+(\.\d+)?/, effectSliderValue);
+  previewImage.style.filter = previewImage.style.filter.replace(FILTER_VALUE_REGEX, effectSliderValue);
 });
 
 effectList.addEventListener('change', (evt) => {
@@ -61,19 +56,19 @@ effectList.addEventListener('change', (evt) => {
 
     switch (effectInput.value) {
       case 'chrome':
-        addChromeEffect();
+        addEffect(0, 1, 0.1, 'grayscale');
         break;
       case 'sepia':
-        addSepiaEffect();
+        addEffect(0, 1, 0.1, 'sepia');
         break;
       case 'marvin':
-        addMarvinEffect();
+        addEffect(0, 100, 1, 'invert', '%');
         break;
       case 'phobos':
-        addPhobosEffect();
+        addEffect(0, 3, 0.1, 'blur', 'px');
         break;
       case 'heat':
-        addHeatEffect();
+        addEffect(1, 3, 0.1, 'brightness');
         break;
       default:
         cancelEffects();
