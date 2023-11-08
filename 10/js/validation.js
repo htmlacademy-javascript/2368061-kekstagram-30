@@ -3,53 +3,47 @@ const HASHTAG_COUNT_MAX = 5;
 const DESCRIPTION_LENGTH_MAX = 140;
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
-let duplicateHashtags = [];
-let invalidHashtags = [];
+let duplicateTags, invalidTags;
 
-const validateHashtagCount = (value) => value.trim().replace(/\s+/g, ' ').split(' ').length <= HASHTAG_COUNT_MAX;
+const normalizeTags = (tagString) => tagString.trim().toLowerCase().split(' ').filter(Boolean);
+
+const validateHashtagCount = (value) => normalizeTags(value).length <= HASHTAG_COUNT_MAX;
 
 const getHashtagCountError = () => `Количество хэш-тегов превышает ${HASHTAG_COUNT_MAX}`;
 
 const validateHashtagUniqueness = (value) => {
-  const hashtagArray = value.trim().replace(/\s+/g, ' ').toLowerCase().split(' ');
-  const uniqueHashtags = {};
-  duplicateHashtags = [];
+  const uniqueTags = new Set();
+  duplicateTags = new Set();
 
-  hashtagArray.forEach((hashtag) => {
-    if (uniqueHashtags[hashtag]) {
-      if (!duplicateHashtags.includes(hashtag)) {
-        duplicateHashtags.push(hashtag);
-      }
+  normalizeTags(value).forEach((tag) => {
+    if (uniqueTags.has(tag)) {
+      duplicateTags.add(tag);
     } else {
-      uniqueHashtags[hashtag] = true;
+      uniqueTags.add(tag);
     }
   });
 
-  return !duplicateHashtags.length;
+  return !duplicateTags.size;
 };
 
 const getHashtagUniquenessError = () => {
-  const errorLabel = (duplicateHashtags.length === 1) ? 'Хэш-тег повторяется: ' : 'Хэш-теги повторяются: ';
+  const errorLabel = (duplicateTags.size === 1) ? 'Хэш-тег повторяется:' : 'Хэш-теги повторяются:';
 
-  return errorLabel + duplicateHashtags.join(', ');
+  return `${errorLabel} ${[...duplicateTags].join(' ')}`;
 };
 
 const validateHashtagSyntax = (value) => {
-  if (value === '') {
-    return true;
-  }
+  const invalidTagsArray = normalizeTags(value).filter((tag) => !HASHTAG_REGEX.test(tag));
 
-  const hashtagArray = value.trim().replace(/\s+/g, ' ').split(' ');
+  invalidTags = new Set(invalidTagsArray);
 
-  invalidHashtags = hashtagArray.filter((hashtag) => !HASHTAG_REGEX.test(hashtag));
-
-  return !invalidHashtags.length;
+  return !invalidTags.size;
 };
 
 const getHashtagSyntaxError = () => {
-  const errorLabel = (invalidHashtags.length === 1) ? 'Невалидный хэш-тег: ' : 'Невалидные хэш-теги: ';
+  const errorLabel = (invalidTags.size === 1) ? 'Неправильный хэш-тег:' : 'Неправильные хэш-теги:';
 
-  return errorLabel + invalidHashtags.join(' ');
+  return `${errorLabel} ${[...invalidTags].join(' ')}`;
 };
 
 const validateDescriptionLength = (value) => value.length <= DESCRIPTION_LENGTH_MAX;
@@ -59,9 +53,9 @@ const getDescriptionLengthError = () => `Длина комментария бо�
 const createPristine = (form, hashtagField, descriptionField) => {
   const pristine = new Pristine(form, {
     classTo: 'img-upload__field-wrapper',
-    errorClass: 'img-upload__field-wrapper--error',
     errorTextParent: 'img-upload__field-wrapper',
-    errorTextTag: 'p'
+    errorTextTag: 'p',
+    errorTextClass: 'img-upload__field-wrapper--error'
   });
 
   pristine.addValidator(hashtagField, validateHashtagCount, getHashtagCountError);

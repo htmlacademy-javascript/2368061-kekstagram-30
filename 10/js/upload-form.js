@@ -1,28 +1,28 @@
 import { isEscapeKey } from './util.js';
 import { createPristine } from './validation.js';
-import { cancelEffect } from './effect.js';
+import { resetEffect } from './effect.js';
 
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_STEP = 25;
 
 const form = document.querySelector('.img-upload__form');
-const uploadInput = form.querySelector('.img-upload__input');
+const fileField = form.querySelector('.img-upload__input');
 const overlay = form.querySelector('.img-upload__overlay');
-const hashtags = overlay.querySelector('.text__hashtags');
-const description = overlay.querySelector('.text__description');
+const hashtagField = overlay.querySelector('.text__hashtags');
+const descriptionField = overlay.querySelector('.text__description');
 const scaleValue = overlay.querySelector('.scale__control--value');
 const scaleDownControl = overlay.querySelector('.scale__control--smaller');
 const scaleUpControl = overlay.querySelector('.scale__control--bigger');
 const previewImage = overlay.querySelector('.img-upload__preview > img');
 
-const pristine = createPristine(form, hashtags, description);
+const pristine = createPristine(form, hashtagField, descriptionField);
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
 
-    if (![hashtags, description].includes(document.activeElement)) {
+    if (![hashtagField, descriptionField].includes(document.activeElement)) {
       form.reset();
     }
   }
@@ -32,7 +32,7 @@ const openUploadForm = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  cancelEffect();
+  resetEffect();
 
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -47,7 +47,7 @@ const closeUploadForm = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const changeScale = (value) => {
+const setScale = (value) => {
   if (value < SCALE_MIN) {
     value = SCALE_MIN;
   } else if (value > SCALE_MAX) {
@@ -59,7 +59,7 @@ const changeScale = (value) => {
 };
 
 const addImageUploadHandler = () => {
-  uploadInput.addEventListener('change', () => {
+  fileField.addEventListener('change', () => {
     openUploadForm();
   });
 };
@@ -79,13 +79,13 @@ form.addEventListener('reset', () => {
 scaleDownControl.addEventListener('click', () => {
   const scaleAfterClick = parseInt(scaleValue.value, 10) - SCALE_STEP;
 
-  changeScale(scaleAfterClick);
+  setScale(scaleAfterClick);
 });
 
 scaleUpControl.addEventListener('click', () => {
   const scaleAfterClick = parseInt(scaleValue.value, 10) + SCALE_STEP;
 
-  changeScale(scaleAfterClick);
+  setScale(scaleAfterClick);
 });
 
 export { addImageUploadHandler };

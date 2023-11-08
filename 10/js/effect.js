@@ -2,29 +2,34 @@ const SLIDER_INITIAL_MIN = 0;
 const SLIDER_INITIAL_MAX = 100;
 const SLIDER_INITIAL_STEP = 1;
 const FILTER_VALUE_REGEX = /\d+(\.\d+)?/;
+const EFFECT_PROPERTIES = {
+  chrome: { min: 0, max: 1, step: 0.1, filter: 'grayscale' },
+  sepia: { min: 0, max: 1, step: 0.1, filter: 'sepia' },
+  marvin: { min: 0, max: 100, step: 1, filter: 'invert', unit: '%' },
+  phobos: { min: 0, max: 3, step: 0.1, filter: 'blur', unit: 'px' },
+  heat: { min: 1, max: 3, step: 0.1, filter: 'brightness' }
+};
 
 const previewImage = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
 const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 const effectSlider = effectLevelContainer.querySelector('.effect-level__slider');
-const effectValue = effectLevelContainer.querySelector('.effect-level__value');
+const effectLevel = effectLevelContainer.querySelector('.effect-level__value');
 
-const addEffect = (min, max, step, filter, unit = '') => {
+const setEffect = ({ min, max, step, filter, unit = '' }) => {
+  effectLevelContainer.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
-    range: {
-      min,
-      max
-    },
+    range: { min, max },
     start: max,
     step
   });
   previewImage.style.filter = `${filter}(${max}${unit})`;
 };
 
-const cancelEffect = () => {
+const resetEffect = () => {
   effectLevelContainer.classList.add('hidden');
   previewImage.style.filter = '';
-  effectValue.value = '';
+  effectLevel.value = SLIDER_INITIAL_MAX;
 };
 
 noUiSlider.create(effectSlider, {
@@ -44,36 +49,24 @@ noUiSlider.create(effectSlider, {
 effectSlider.noUiSlider.on('update', () => {
   const effectSliderValue = effectSlider.noUiSlider.get();
 
-  effectValue.value = effectSliderValue;
+  effectLevel.value = effectSliderValue;
   previewImage.style.filter = previewImage.style.filter.replace(FILTER_VALUE_REGEX, effectSliderValue);
 });
 
 effectList.addEventListener('change', (evt) => {
-  const effectInput = evt.target.closest('input.effects__radio:checked');
+  const effectInput = evt.target.closest('input.effects__radio');
 
   if (effectInput) {
-    effectLevelContainer.classList.remove('hidden');
+    for (const effect in EFFECT_PROPERTIES) {
+      if (effect === effectInput.value) {
+        setEffect(EFFECT_PROPERTIES[effect]);
 
-    switch (effectInput.value) {
-      case 'chrome':
-        addEffect(0, 1, 0.1, 'grayscale');
-        break;
-      case 'sepia':
-        addEffect(0, 1, 0.1, 'sepia');
-        break;
-      case 'marvin':
-        addEffect(0, 100, 1, 'invert', '%');
-        break;
-      case 'phobos':
-        addEffect(0, 3, 0.1, 'blur', 'px');
-        break;
-      case 'heat':
-        addEffect(1, 3, 0.1, 'brightness');
-        break;
-      default:
-        cancelEffect();
+        return;
+      }
     }
+
+    resetEffect();
   }
 });
 
-export { cancelEffect };
+export { resetEffect };

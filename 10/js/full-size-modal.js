@@ -55,7 +55,10 @@ const addFullSizeModalHandlers = (pictures) => {
 
     if (thumbnail) {
       evt.preventDefault();
-      currentPictureData = pictures[thumbnail.dataset.arrayIndex];
+
+      const thumbnailId = +thumbnail.dataset.thumbnailId;
+
+      currentPictureData = pictures.find(({ id }) => id === thumbnailId);
       openFullSizeModal(currentPictureData);
     }
   });
