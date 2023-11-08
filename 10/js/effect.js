@@ -2,7 +2,8 @@ const SLIDER_INITIAL_MIN = 0;
 const SLIDER_INITIAL_MAX = 100;
 const SLIDER_INITIAL_STEP = 1;
 const FILTER_VALUE_REGEX = /\d+(\.\d+)?/;
-const EFFECT_PROPERTIES = {
+
+const effectProperties = {
   chrome: { min: 0, max: 1, step: 0.1, filter: 'grayscale' },
   sepia: { min: 0, max: 1, step: 0.1, filter: 'sepia' },
   marvin: { min: 0, max: 100, step: 1, filter: 'invert', unit: '%' },
@@ -57,9 +58,9 @@ effectList.addEventListener('change', (evt) => {
   const effectInput = evt.target.closest('input.effects__radio');
 
   if (effectInput) {
-    for (const effect in EFFECT_PROPERTIES) {
+    for (const effect in effectProperties) {
       if (effect === effectInput.value) {
-        setEffect(EFFECT_PROPERTIES[effect]);
+        setEffect(effectProperties[effect]);
 
         return;
       }
