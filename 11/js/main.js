@@ -1,18 +1,18 @@
 import { getData } from './api.js';
 import { renderThumbnails } from './thumbnail-gallery.js';
 import { showDownloadError } from './util.js';
-import { addFullSizeModalHandlers } from './full-size-modal.js';
-import { addImageUploadHandler } from './upload-form.js';
+import { setFullSizeModalHandlers } from './full-size-modal.js';
+import { setPictureInputChange } from './upload-form.js';
 
 const bootstrap = async () => {
   try {
     const pictures = await getData();
     renderThumbnails(pictures);
-    addFullSizeModalHandlers(pictures);
+    setFullSizeModalHandlers(pictures);
   } catch {
     showDownloadError();
   }
 };
 
-addImageUploadHandler();
+setPictureInputChange();
 bootstrap();

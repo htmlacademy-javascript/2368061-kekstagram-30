@@ -12,7 +12,7 @@ const SubmitButtonText = {
 };
 
 const form = document.querySelector('.img-upload__form');
-const fileField = form.querySelector('.img-upload__input');
+const pictureInput = form.querySelector('.img-upload__input');
 const overlay = form.querySelector('.img-upload__overlay');
 const hashtagField = overlay.querySelector('.text__hashtags');
 const descriptionField = overlay.querySelector('.text__description');
@@ -69,8 +69,8 @@ const toggleSubmitButton = (isDisabled) => {
   submitButton.textContent = isDisabled ? SubmitButtonText.SENDING : SubmitButtonText.IDLE;
 };
 
-const addImageUploadHandler = () => {
-  fileField.addEventListener('change', () => {
+const setPictureInputChange = () => {
+  pictureInput.addEventListener('change', () => {
     openUploadForm();
   });
 };
@@ -109,4 +109,4 @@ scaleUpControl.addEventListener('click', () => {
   setScale(scaleAfterClick);
 });
 
-export { addImageUploadHandler };
+export { setPictureInputChange };

@@ -47,7 +47,7 @@ function closeFullSizeModal() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-const addFullSizeModalHandlers = (pictures) => {
+const setFullSizeModalHandlers = (pictures) => {
   let currentPictureData;
 
   pictureContainer.addEventListener('click', (evt) => {
@@ -72,4 +72,4 @@ closeButton.addEventListener('click', () => {
   closeFullSizeModal();
 });
 
-export { addFullSizeModalHandlers };
+export { setFullSizeModalHandlers };
