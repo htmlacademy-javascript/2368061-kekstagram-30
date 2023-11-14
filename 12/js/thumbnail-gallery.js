@@ -30,8 +30,6 @@ const renderThumbnails = (pictures) => {
   pictureContainer.append(fragment);
 };
 
-const debouncedRenderThumbnails = debounce(renderThumbnails, RERENDER_DELAY);
-
 const changeActiveFilterButton = (clickedFilterButton) => {
   if (!clickedFilterButton.classList.contains('img-filters__button--active')) {
     const activeFilterButton = filters.querySelector('.img-filters__button--active');
@@ -61,6 +59,21 @@ const getDiscussedPictures = (pictures) => {
   return pictures.slice().sort(compareCommentCount);
 };
 
+const filterThumbnails = (pictures, filterButton) => {
+  removeThumbnails();
+
+  const idToFilterFunction = {
+    'filter-default': (pics) => pics,
+    'filter-random': getRandomPictures,
+    'filter-discussed': getDiscussedPictures,
+  };
+  const filteredPictures = idToFilterFunction[filterButton.id](pictures);
+
+  renderThumbnails(filteredPictures);
+};
+
+const debouncedFilterThumbnails = debounce(filterThumbnails, RERENDER_DELAY);
+
 const setThumbnailFilters = (pictures) => {
   filters.classList.remove('img-filters--inactive');
 
@@ -68,17 +81,8 @@ const setThumbnailFilters = (pictures) => {
     const filterButton = evt.target.closest('button.img-filters__button');
 
     if (filterButton) {
-      removeThumbnails();
       changeActiveFilterButton(filterButton);
-
-      const idToFilterFunction = {
-        'filter-default': (pics) => pics,
-        'filter-random': getRandomPictures,
-        'filter-discussed': getDiscussedPictures,
-      };
-      const filteredPictures = idToFilterFunction[filterButton.id](pictures);
-
-      debouncedRenderThumbnails(filteredPictures);
+      debouncedFilterThumbnails(pictures, filterButton);
     }
   });
 };

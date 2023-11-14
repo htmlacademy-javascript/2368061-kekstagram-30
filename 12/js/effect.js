@@ -11,7 +11,7 @@ const effectProperties = {
   heat: { min: 1, max: 3, step: 0.1, filter: 'brightness' }
 };
 
-const previewImage = document.querySelector('.img-upload__preview > img');
+const mainPreview = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
 const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 const effectSlider = effectLevelContainer.querySelector('.effect-level__slider');
@@ -24,12 +24,12 @@ const setEffect = ({ min, max, step, filter, unit = '' }) => {
     start: max,
     step
   });
-  previewImage.style.filter = `${filter}(${max}${unit})`;
+  mainPreview.style.filter = `${filter}(${max}${unit})`;
 };
 
 const resetEffect = () => {
   effectLevelContainer.classList.add('hidden');
-  previewImage.style.filter = '';
+  mainPreview.style.filter = '';
   effectLevel.value = SLIDER_INITIAL_MAX;
 };
 
@@ -51,7 +51,7 @@ effectSlider.noUiSlider.on('update', () => {
   const effectSliderValue = effectSlider.noUiSlider.get();
 
   effectLevel.value = effectSliderValue;
-  previewImage.style.filter = previewImage.style.filter.replace(FILTER_VALUE_REGEX, effectSliderValue);
+  mainPreview.style.filter = mainPreview.style.filter.replace(FILTER_VALUE_REGEX, effectSliderValue);
 });
 
 effectList.addEventListener('change', (evt) => {
