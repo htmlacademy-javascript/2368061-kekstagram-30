@@ -1,24 +1,24 @@
 import { isEscapeKey } from './util.js';
 import { loadComments } from './comment.js';
 
-const pictureContainer = document.querySelector('.pictures');
-const modal = document.querySelector('.big-picture');
-const picture = modal.querySelector('.big-picture__img img');
-const likeCount = modal.querySelector('.likes-count');
-const totalCommentCount = modal.querySelector('.social__comment-total-count');
-const commentList = modal.querySelector('.social__comments');
-const caption = modal.querySelector('.social__caption');
-const commentLoader = modal.querySelector('.comments-loader');
-const closeButton = modal.querySelector('.big-picture__cancel');
+const pictureContainerNode = document.querySelector('.pictures');
+const modalNode = document.querySelector('.big-picture');
+const modalPictureNode = modalNode.querySelector('.big-picture__img img');
+const likeCountNode = modalNode.querySelector('.likes-count');
+const totalCommentCountNode = modalNode.querySelector('.social__comment-total-count');
+const commentListNode = modalNode.querySelector('.social__comments');
+const captionNode = modalNode.querySelector('.social__caption');
+const commentLoaderNode = modalNode.querySelector('.comments-loader');
+const closeButtonNode = modalNode.querySelector('.big-picture__cancel');
 
 const fillModalData = ({ url, likes, comments, description }) => {
-  picture.src = url;
-  picture.alt = description;
-  likeCount.textContent = likes;
-  caption.textContent = description;
-  totalCommentCount.textContent = comments.length;
+  modalPictureNode.src = url;
+  modalPictureNode.alt = description;
+  likeCountNode.textContent = likes;
+  captionNode.textContent = description;
+  totalCommentCountNode.textContent = comments.length;
 
-  commentLoader.classList.remove('hidden');
+  commentLoaderNode.classList.remove('hidden');
   loadComments(comments);
 };
 
@@ -32,16 +32,16 @@ const onDocumentKeydown = (evt) => {
 const openFullSizeModal = (pictureData) => {
   fillModalData(pictureData);
 
-  modal.classList.remove('hidden');
+  modalNode.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
 function closeFullSizeModal() {
-  commentList.replaceChildren();
+  commentListNode.replaceChildren();
 
-  modal.classList.add('hidden');
+  modalNode.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -50,25 +50,25 @@ function closeFullSizeModal() {
 const setFullSizeModalHandlers = (pictures) => {
   let currentPictureData;
 
-  pictureContainer.addEventListener('click', (evt) => {
-    const thumbnail = evt.target.closest('a.picture');
+  pictureContainerNode.addEventListener('click', (evt) => {
+    const thumbnailNode = evt.target.closest('a.picture');
 
-    if (thumbnail) {
+    if (thumbnailNode) {
       evt.preventDefault();
 
-      const thumbnailId = +thumbnail.dataset.thumbnailId;
+      const thumbnailId = +thumbnailNode.dataset.thumbnailId;
 
       currentPictureData = pictures.find(({ id }) => id === thumbnailId);
       openFullSizeModal(currentPictureData);
     }
   });
 
-  commentLoader.addEventListener('click', () => {
+  commentLoaderNode.addEventListener('click', () => {
     loadComments(currentPictureData.comments);
   });
 };
 
-closeButton.addEventListener('click', () => {
+closeButtonNode.addEventListener('click', () => {
   closeFullSizeModal();
 });
 

@@ -1,7 +1,7 @@
 const SLIDER_INITIAL_MIN = 0;
 const SLIDER_INITIAL_MAX = 100;
 const SLIDER_INITIAL_STEP = 1;
-const FILTER_VALUE_REGEX = /\d+(\.\d+)?/;
+const EFFECT_VALUE_REGEX = /\d+(\.\d+)?/;
 
 const effectProperties = {
   chrome: { min: 0, max: 1, step: 0.1, filter: 'grayscale' },
@@ -11,29 +11,29 @@ const effectProperties = {
   heat: { min: 1, max: 3, step: 0.1, filter: 'brightness' }
 };
 
-const mainPreview = document.querySelector('.img-upload__preview > img');
-const effectList = document.querySelector('.effects__list');
-const effectLevelContainer = document.querySelector('.img-upload__effect-level');
-const effectSlider = effectLevelContainer.querySelector('.effect-level__slider');
-const effectLevel = effectLevelContainer.querySelector('.effect-level__value');
+const mainPreviewNode = document.querySelector('.img-upload__preview > img');
+const effectListNode = document.querySelector('.effects__list');
+const effectLevelNode = document.querySelector('.img-upload__effect-level');
+const effectSliderNode = effectLevelNode.querySelector('.effect-level__slider');
+const effectValueNode = effectLevelNode.querySelector('.effect-level__value');
 
 const setEffect = ({ min, max, step, filter, unit = '' }) => {
-  effectLevelContainer.classList.remove('hidden');
-  effectSlider.noUiSlider.updateOptions({
+  effectLevelNode.classList.remove('hidden');
+  effectSliderNode.noUiSlider.updateOptions({
     range: { min, max },
     start: max,
     step
   });
-  mainPreview.style.filter = `${filter}(${max}${unit})`;
+  mainPreviewNode.style.filter = `${filter}(${max}${unit})`;
 };
 
 const resetEffect = () => {
-  effectLevelContainer.classList.add('hidden');
-  mainPreview.style.filter = '';
-  effectLevel.value = SLIDER_INITIAL_MAX;
+  effectLevelNode.classList.add('hidden');
+  mainPreviewNode.style.filter = '';
+  effectValueNode.value = SLIDER_INITIAL_MAX;
 };
 
-noUiSlider.create(effectSlider, {
+noUiSlider.create(effectSliderNode, {
   range: {
     min: SLIDER_INITIAL_MIN,
     max: SLIDER_INITIAL_MAX,
@@ -47,19 +47,19 @@ noUiSlider.create(effectSlider, {
   },
 });
 
-effectSlider.noUiSlider.on('update', () => {
-  const effectSliderValue = effectSlider.noUiSlider.get();
+effectSliderNode.noUiSlider.on('update', () => {
+  const effectSliderValue = effectSliderNode.noUiSlider.get();
 
-  effectLevel.value = effectSliderValue;
-  mainPreview.style.filter = mainPreview.style.filter.replace(FILTER_VALUE_REGEX, effectSliderValue);
+  effectValueNode.value = effectSliderValue;
+  mainPreviewNode.style.filter = mainPreviewNode.style.filter.replace(EFFECT_VALUE_REGEX, effectSliderValue);
 });
 
-effectList.addEventListener('change', (evt) => {
-  const effectInput = evt.target.closest('input.effects__radio');
+effectListNode.addEventListener('change', (evt) => {
+  const effectRadioNode = evt.target.closest('input.effects__radio');
 
-  if (effectInput) {
+  if (effectRadioNode) {
     for (const effect in effectProperties) {
-      if (effect === effectInput.value) {
+      if (effect === effectRadioNode.value) {
         setEffect(effectProperties[effect]);
 
         return;

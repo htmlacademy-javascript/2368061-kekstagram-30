@@ -23,7 +23,7 @@ const hasAllValidTags = (value) => normalizeTags(value).every((tag) => HASHTAG_R
 
 const hasValidDescriptionLength = (value) => value.length <= DESCRIPTION_LENGTH_MAX;
 
-const createPristine = (form, hashtagField, descriptionField) => {
+const createPristine = (form, hashtagFieldNode, descriptionFieldNode) => {
   const pristine = new Pristine(form, {
     classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
@@ -31,10 +31,10 @@ const createPristine = (form, hashtagField, descriptionField) => {
     errorTextClass: 'img-upload__field-wrapper--error'
   });
 
-  pristine.addValidator(hashtagField, hasValidTagCount, ErrorText.INVALID_COUNT);
-  pristine.addValidator(hashtagField, hasAllUniqueTags, ErrorText.NOT_UNIQUE);
-  pristine.addValidator(hashtagField, hasAllValidTags, ErrorText.INVALID_SYNTAX);
-  pristine.addValidator(descriptionField, hasValidDescriptionLength, ErrorText.INVALID_LENGTH);
+  pristine.addValidator(hashtagFieldNode, hasValidTagCount, ErrorText.INVALID_COUNT);
+  pristine.addValidator(hashtagFieldNode, hasAllUniqueTags, ErrorText.NOT_UNIQUE);
+  pristine.addValidator(hashtagFieldNode, hasAllValidTags, ErrorText.INVALID_SYNTAX);
+  pristine.addValidator(descriptionFieldNode, hasValidDescriptionLength, ErrorText.INVALID_LENGTH);
 
   return pristine;
 };

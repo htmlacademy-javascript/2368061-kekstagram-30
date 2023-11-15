@@ -9,50 +9,48 @@ const ButtonId = {
   DISCUSSED: 'filter-discussed'
 };
 
-const filters = document.querySelector('.img-filters');
-const pictureContainer = document.querySelector('.pictures');
+const buttonContainerNode = document.querySelector('.img-filters');
+const pictureContainerNode = document.querySelector('.pictures');
 
-let currentButtonId = ButtonId.DEFAULT;
+let activeButtonNode = buttonContainerNode.querySelector(`#${ButtonId.DEFAULT}`);
 
-const changeActiveFilterButton = (clickedButton) => {
-  if (clickedButton.id !== currentButtonId) {
-    const activeButton = filters.querySelector(`#${currentButtonId}`);
-
-    currentButtonId = clickedButton.id;
-    activeButton.classList.remove('img-filters__button--active');
-    clickedButton.classList.add('img-filters__button--active');
-  }
-};
-
-const getRandomPictures = (pictures) => {
+const selectRandomPictures = (pictures) => {
   const generateRandomIndex = createRandomIdFromRangeGenerator(0, pictures.length - 1);
   const randomPicturesCount = Math.min(RANDOM_THUMBNAILS_MAX, pictures.length);
 
   return Array.from({ length: randomPicturesCount }, () => pictures[generateRandomIndex()]);
 };
 
-const getDiscussedPictures = (pictures) => {
+const sortByCommentsDescending = (pictures) => {
   const compareCommentCount = (a, b) => b.comments.length - a.comments.length;
 
   return [...pictures].sort(compareCommentCount);
 };
 
-const btnIdToFilterHandler = {
-  [ButtonId.DEFAULT]: (pics) => pics,
-  [ButtonId.RANDOM]: getRandomPictures,
-  [ButtonId.DISCUSSED]: getDiscussedPictures
+const buttonIdToFilterHandler = {
+  [ButtonId.DEFAULT]: (data) => data,
+  [ButtonId.RANDOM]: selectRandomPictures,
+  [ButtonId.DISCUSSED]: sortByCommentsDescending
+};
+
+const changeActiveFilterButton = (clickedButtonNode) => {
+  if (clickedButtonNode !== activeButtonNode) {
+    clickedButtonNode.classList.add('img-filters__button--active');
+    activeButtonNode.classList.remove('img-filters__button--active');
+    activeButtonNode = clickedButtonNode;
+  }
 };
 
 const removeThumbnails = () => {
-  const thumbnails = pictureContainer.querySelectorAll('a.picture');
+  const thumbnailNodes = pictureContainerNode.querySelectorAll('a.picture');
 
-  thumbnails.forEach((thumbnail) => {
-    thumbnail.remove();
+  thumbnailNodes.forEach((thumbnailNode) => {
+    thumbnailNode.remove();
   });
 };
 
-const filterThumbnails = (pictures, button) => {
-  const filteredPictures = btnIdToFilterHandler[button.id](pictures);
+const filterThumbnails = (pictures, buttonNode) => {
+  const filteredPictures = buttonIdToFilterHandler[buttonNode.id](pictures);
 
   removeThumbnails();
   renderThumbnails(filteredPictures);
@@ -61,14 +59,14 @@ const filterThumbnails = (pictures, button) => {
 const debouncedFilterThumbnails = debounce(filterThumbnails, RERENDER_DELAY);
 
 const setThumbnailFilters = (pictures) => {
-  filters.classList.remove('img-filters--inactive');
+  buttonContainerNode.classList.remove('img-filters--inactive');
 
-  filters.addEventListener('click', (evt) => {
-    const button = evt.target.closest('button.img-filters__button');
+  buttonContainerNode.addEventListener('click', (evt) => {
+    const buttonNode = evt.target.closest('button.img-filters__button');
 
-    if (button?.id === ButtonId.RANDOM || button?.id !== currentButtonId) {
-      changeActiveFilterButton(button);
-      debouncedFilterThumbnails(pictures, button);
+    if (buttonNode?.id === ButtonId.RANDOM || buttonNode !== activeButtonNode) {
+      changeActiveFilterButton(buttonNode);
+      debouncedFilterThumbnails(pictures, buttonNode);
     }
   });
 };
