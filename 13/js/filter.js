@@ -12,7 +12,8 @@ const ButtonId = {
 const buttonContainerNode = document.querySelector('.img-filters');
 const pictureContainerNode = document.querySelector('.pictures');
 
-let activeButtonNode = buttonContainerNode.querySelector(`#${ButtonId.DEFAULT}`);
+let currentFilterButtonNode = buttonContainerNode.querySelector(`#${ButtonId.DEFAULT}`);
+let activeButtonNode = currentFilterButtonNode;
 
 const selectRandomPictures = (pictures) => {
   const generateRandomIndex = createRandomIdFromRangeGenerator(0, pictures.length - 1);
@@ -33,7 +34,7 @@ const buttonIdToFilterHandler = {
   [ButtonId.DISCUSSED]: sortByCommentsDescending
 };
 
-const changeActiveFilterButton = (clickedButtonNode) => {
+const changeActiveButton = (clickedButtonNode) => {
   if (clickedButtonNode !== activeButtonNode) {
     clickedButtonNode.classList.add('img-filters__button--active');
     activeButtonNode.classList.remove('img-filters__button--active');
@@ -49,11 +50,14 @@ const removeThumbnails = () => {
   });
 };
 
-const filterThumbnails = (pictures, buttonNode) => {
-  const filteredPictures = buttonIdToFilterHandler[buttonNode.id](pictures);
+const filterThumbnails = (pictures, clickedButtonNode) => {
+  if (clickedButtonNode !== currentFilterButtonNode || clickedButtonNode.id === ButtonId.RANDOM) {
+    const filteredPictures = buttonIdToFilterHandler[clickedButtonNode.id](pictures);
 
-  removeThumbnails();
-  renderThumbnails(filteredPictures);
+    removeThumbnails();
+    renderThumbnails(filteredPictures);
+    currentFilterButtonNode = clickedButtonNode;
+  }
 };
 
 const debouncedFilterThumbnails = debounce(filterThumbnails, RERENDER_DELAY);
@@ -62,11 +66,11 @@ const setThumbnailFilters = (pictures) => {
   buttonContainerNode.classList.remove('img-filters--inactive');
 
   buttonContainerNode.addEventListener('click', (evt) => {
-    const buttonNode = evt.target.closest('button.img-filters__button');
+    const clickedButtonNode = evt.target.closest('button.img-filters__button');
 
-    if (buttonNode?.id === ButtonId.RANDOM || buttonNode !== activeButtonNode) {
-      changeActiveFilterButton(buttonNode);
-      debouncedFilterThumbnails(pictures, buttonNode);
+    if (clickedButtonNode) {
+      changeActiveButton(clickedButtonNode);
+      debouncedFilterThumbnails(pictures, clickedButtonNode);
     }
   });
 };
