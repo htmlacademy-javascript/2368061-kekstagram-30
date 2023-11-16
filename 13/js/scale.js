@@ -1,6 +1,7 @@
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_STEP = 25;
+const PERCENTAGE_DENOMINATOR = 100;
 
 const mainPreviewNode = document.querySelector('.img-upload__preview > img');
 const scaleNode = document.querySelector('.img-upload__scale');
@@ -8,15 +9,15 @@ const scaleValueNode = scaleNode.querySelector('.scale__control--value');
 const scaleDownNode = scaleNode.querySelector('.scale__control--smaller');
 const scaleUpNode = scaleNode.querySelector('.scale__control--bigger');
 
-const setScale = (value) => {
-  if (value < SCALE_MIN) {
-    value = SCALE_MIN;
-  } else if (value > SCALE_MAX) {
-    value = SCALE_MAX;
+const setScale = (percentageValue) => {
+  if (percentageValue < SCALE_MIN) {
+    percentageValue = SCALE_MIN;
+  } else if (percentageValue > SCALE_MAX) {
+    percentageValue = SCALE_MAX;
   }
 
-  scaleValueNode.value = `${value}%`;
-  mainPreviewNode.style.transform = `scale(${value / 100})`;
+  scaleValueNode.value = `${percentageValue}%`;
+  mainPreviewNode.style.transform = `scale(${percentageValue / PERCENTAGE_DENOMINATOR})`;
 };
 
 const setScaleHandlers = () => {
