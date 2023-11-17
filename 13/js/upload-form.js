@@ -27,7 +27,9 @@ const isErrorMessageExists = () => Boolean(document.querySelector('.error'));
 const isTextFieldFocused = () => [hashtagFieldNode, descriptionFieldNode].includes(document.activeElement);
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isTextFieldFocused() && !isErrorMessageExists()) {
+  const handlerCondition = isEscapeKey(evt) && !isTextFieldFocused() && !isErrorMessageExists();
+
+  if (handlerCondition) {
     evt.preventDefault();
     formNode.reset();
   }
